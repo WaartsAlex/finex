@@ -11,7 +11,7 @@ app.use(VueFire, {
     firebaseApp,
     modules: [
       // we will see other modules later on
-      VueFireAuth(),
+      VueFireAuth()
     ],
 });
 
