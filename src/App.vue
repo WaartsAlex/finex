@@ -1,16 +1,22 @@
 <template>
   <div>
-    <excerciseHeader msg="Welcome to Your Vue.js App"/>
+    <ExcerciseHeader/>
+    <FinexHeader />
+    <FinexNews />
   </div>
 </template>
 
 <script>
 import ExcerciseHeader from './components/ExcerciseHeader.vue'
+import FinexHeader from './components/FinexHeader.vue'
+import FinexNews from './components/FinexNews.vue'
 
 export default {
   name: 'App',
   components: {
-    ExcerciseHeader
+    ExcerciseHeader,
+    FinexHeader,
+    FinexNews
   }
 }
 </script>
