@@ -3,7 +3,14 @@
 ## Project setup
 ```
 npm install
+
+Add .env file
+
 ```
+## Images
+To add images
+1. Move to public folder
+2. Move under assets folder
 
 ### Compiles and hot-reloads for development
 ```
@@ -26,5 +33,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ### TODO
 - Add authentication and ruling to firebase
 - Add admin panel for adding news-articles
-- Add login for different departments + rules to firebase
-- Add admin panel for different departments
+- play Scenario-vid 
+- replay Scenario-vid
+- create Scenario-vid  
