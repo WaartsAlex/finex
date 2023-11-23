@@ -7,7 +7,10 @@ module.exports = {
       "klu-blue": "#005187",
       "klu-orange": "#e17000",
       "white": "#FFF",
-      "red": "#F00"
+      "red": "#F00",
+      "gray": "#DDD",
+      "dark-gray": "#555",
+      "light-blue": "#59C"
     },
     extend: {},
   },

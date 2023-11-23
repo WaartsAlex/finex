@@ -1,17 +1,25 @@
 <template>
-    <header class="flex text-white bg-klu-blue px-5 ">
-        <div>
-          <h1 class="text-2xl">KLU-less News</h1>
-          <h2 class="text-lg">De newssite voor schapen...</h2>
-        </div>
-        <nav>
-            <!-- Add vue-router -->
-        </nav>
-    </header>
+  <header class="bg-white flex flex-col align-center">
+    <img src="../assets/images/header_image.jpg" class="w-full" />
+    <!-- <div class="absolute"> -->
+      <div class="flex items-end ml-56 max-h-24 mb-6">
+        <img src="../assets/images/logo.png" class="rounded-full w-1/6"/>
+        <h1 class="text-2xl font-bold ml-5">KLULESS</h1>
+      </div>
+    <!-- </div> -->
+  </header>
 </template>
 
-<script>
-  export default {
-    name: 'FinexHeader'
-  }
+<script setup>
+// let code = "1klu";
+
+// const emit = defineEmits(["codeUpdate"])
+
+// function codeCheck() {
+//   if (code == "givemepower") {
+//     emit('codeUpdate', true);
+//   } else {
+//     emit('codeUpdate', false);
+//   }
+// }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <p class="text-red">--- EXERCISE EXERCISE EXERCISE --- </p>
+  <p class="bg-red text-white">--- EXERCISE --- EXERCISE --- EXERCISE --- </p>
 </template>
 
 <script>
