@@ -17,9 +17,14 @@ To add images
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Build for production on github pages
 ```
 npm run build
+
+git add dist && git commit -m 'adding dist subtree'
+
+git subtree push --prefix dist origin gh-pages
+
 ```
 
 ### Lints and fixes files
