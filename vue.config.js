@@ -4,6 +4,6 @@ const { defineConfig } = require('@vue/cli-service')
 // })
 
 module.exports = {
-  publicPath: "/finex/" 
+  publicPath: process.env.NODE_ENV === "production" ? "/finex/" : "/",
 };
 
