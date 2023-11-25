@@ -22,7 +22,7 @@ function isValid() {
 }
 
 function getAccountImg() {
-  return props.article.AuthorImage ?? "../assets/images/default_user.jpg"; 
+  return props.article.AuthorImage ?? "/finex/assets/images/default_user.jpg"; 
 }
 
 function getDateTime() {
