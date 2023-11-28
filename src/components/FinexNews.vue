@@ -4,6 +4,10 @@ import { collection } from 'firebase/firestore'
 import { useCollection, useFirestore } from 'vuefire'
 const db = useFirestore()
 
+const props = defineProps({
+  isAdmin: Boolean
+});
+
 const articles = useCollection(collection(db, "Articles"));
 </script>
 
@@ -12,6 +16,7 @@ const articles = useCollection(collection(db, "Articles"));
       <FinexArticle 
         v-for="article in articles" :key="article.id"
         :article="article"
+        :isAdmin="props.isAdmin"
         class="my-12"
       />
     </main>

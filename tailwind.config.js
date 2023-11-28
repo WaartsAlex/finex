@@ -10,7 +10,8 @@ module.exports = {
       "red": "#F00",
       "gray": "#DDD",
       "dark-gray": "#555",
-      "light-blue": "#59C"
+      "light-blue": "#59C",
+      "popup": "rgba(225,225,225,0.7)"
     },
     extend: {},
   },
