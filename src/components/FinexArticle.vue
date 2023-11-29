@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { collection, updateDoc, doc } from '@firebase/firestore';
+import { collection, updateDoc, doc, deleteDoc } from '@firebase/firestore';
 import { useFirestore } from 'vuefire';
 
 const props = defineProps({
@@ -11,12 +11,13 @@ const props = defineProps({
 const editMode = ref(false);
 const selectedProfileImage = ref(false);
 const selectedImage = ref(false);
+const selectedVideo = ref(false);
 const newModel = ref({
   Author: props.article.Author ?? "",
   AuthorImage: props.article.AuthorImage ?? "",
   Content: props.article.Content ?? "",
   Date: props.article.Date ?? "",
-  Image: props.article.Image ?? "/",
+  Image: props.article.Image ?? "",
   Video: props.article.Video ?? "",
   Likes: props.article.Likes ?? 0,
   Views: props.article.Views ?? 0,
@@ -46,11 +47,9 @@ function getImg() {
 }
 
 function getAccountImg() {
-  if (editMode.value) {
-    if (newModel.value.AuthorImage == "")
-      return "/finex/assets/images/default_user.jpg"
-    return newModel.value.AuthorImage;
-  } 
+  if (newModel.value.AuthorImage == "")
+      return "/finex/assets/images/default_user.jpg";
+
   return newModel.value.AuthorImage ?? "/finex/assets/images/default_user.jpg"; 
 }
 
@@ -69,6 +68,7 @@ function cancelEdit() {
     Content: props.article.Content,
     Date: props.article.Date,
     Image: props.article.Image,
+    Video: props.article.Video,
     Likes: props.article.Likes,
     Views: props.article.Views,
     Enabled: props.article.Enabled
@@ -86,6 +86,7 @@ async function saveEdit() {
     AuthorImage: newModel.value.AuthorImage,
     Content: newModel.value.Content,
     Image: newModel.value.Image,
+    Video: newModel.value.Video,
     Date: newModel.value.Date,
     Likes: newModel.value.Likes,
     Views: newModel.value.Views,
@@ -105,10 +106,28 @@ function openImageSelect() {
   }
 }
 
+function openVideoSelect() {
+  if (canEdit()) {
+    selectedVideo.value = !selectedVideo.value;
+  }
+}
+
 function toggleEnabled() {
   if (canEdit()) {
     newModel.value.Enabled = !newModel.value.Enabled;
   }
+}
+
+function hasImageMedia() {
+  return newModel.value.Image && newModel.value.Image != "";
+}
+
+function hasVideoMedia() {
+  return !hasImageMedia && newModel.value.Video && newModel.value.Video != "";
+}
+
+function deleteArticle() {
+  deleteDoc(doc(useFirestore(), 'Articles', props.article.id));
 }
 
 </script>
@@ -128,7 +147,7 @@ function toggleEnabled() {
     <div class="flex justify-between items-start w-full">
       <div class="flex items-center font-bold mb-6">
         <!-- Profile Picture -->
-        <img :src="getAccountImg()" class="rounded-full w-1/12" @click="openAuthorImageSelect()"/>
+        <img :src="getAccountImg()" class="rounded-full w-1/12" @click="openAuthorImageSelect()"/> 
 
         <!-- Profile image url popup -->
         <div v-if="canEdit() && selectedProfileImage" class="fixed left-0 top-0 z-10 flex flex-col items-center justify-center w-full h-full bg-popup">
@@ -151,10 +170,10 @@ function toggleEnabled() {
         </div>
       </div>
 
-      <!-- edit buttons -->
       <div v-if="editMode && isAdmin">
+        <!-- edit buttons -->
         <button 
-          class="bg-klu-blue px-3 py-1 rounded-md text-white" 
+          class="bg-klu-blue px-3 py-1 rounded-md text-white mx-3" 
           @click="saveEdit()"
         >
           save
@@ -166,13 +185,18 @@ function toggleEnabled() {
           cancel
         </button>
       </div>
-      <button 
-        v-else-if="isAdmin"
-        class="bg-klu-orange px-3 py-1 rounded-md text-white" 
-        @click="editMode = true"
-      >
-        edit
-      </button>
+
+      <div v-if="!editMode && isAdmin">
+        <button 
+          class="bg-klu-orange px-3 py-1 rounded-md text-white" 
+          @click="editMode = true"
+        >
+          edit
+        </button>
+        
+        <!-- delete button -->
+        <button class="bg-red text-white rounded-md px-3 py-1 mx-3" @click="deleteArticle()">delete</button>
+      </div>
     </div>
 
     <!-- content -->
@@ -181,19 +205,35 @@ function toggleEnabled() {
       {{article.Content}}
     </p>
 
+    <div class="flex justify-evenly items-center w-full my-3">
+      <button class="bg-klu-blue text-white rounded-md px-3 py-1" v-if="canEdit()" @click="openImageSelect()">set media: image</button>
+      <button class="bg-klu-blue text-white rounded-md px-3 py-1" v-if="canEdit()" @click="openVideoSelect()">set media: video</button>
+    </div>
     <!-- image -->
-    <img v-if="article.Image || canEdit()" :src="getImg()" @click="openImageSelect()"/>
+    <img v-if="hasImageMedia || canEdit()" :src="newModel.Image"/>
 
     <!-- image url popup -->
     <div v-if="canEdit() && selectedImage" class="fixed left-0 top-0 z-10 flex flex-col items-center justify-center w-full h-full bg-popup">
       <h1>set image with url:</h1>
       <input v-model="newModel.Image" placeholder="image-src"/>
-      <img :src="getImg()"/>
+      <img :src="getImg()" class="max-h-28"/>
       <button class="m-6 bg-klu-blue text-white rounded-sm p-3" @click="selectedImage = !selectedImage">submit</button>
     </div>
 
     <!-- video -->
-    <video v-else-if="article.Video"></video>
+    <video v-if="hasVideoMedia" >
+      <source :src="newModel.Video">
+    </video>
+
+    <!-- video url popup -->
+    <div v-if="canEdit() && selectedVideo" class="fixed left-0 top-0 z-10 flex flex-col items-center justify-center w-full h-full bg-popup">
+      <h1>set video with url:</h1>
+      <input v-model="newModel.Video" placeholder="video-src"/>
+      <video width="320" height="240" controls>
+        <source :src="newModel.Video">
+      </video>
+      <button class="m-6 bg-klu-blue text-white rounded-sm p-3" @click="openVideoSelect()">submit</button>
+    </div>
 
     <br/>
 
