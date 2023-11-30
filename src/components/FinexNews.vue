@@ -1,15 +1,15 @@
 <script setup>
 import FinexArticle from './FinexArticle.vue'
-import { addDoc, collection } from 'firebase/firestore'
+import { addDoc, collection, Timestamp, orderBy, query } from 'firebase/firestore'
 import { useCollection, useFirestore } from 'vuefire'
 const db = useFirestore()
 
 const props = defineProps({
   isAdmin: Boolean,
-  Date: (new Date()).toLocaleDateString()
+  Date: Timestamp.fromDate(new Date())
 });
 
-const articles = useCollection(collection(db, "Articles"));
+const articles = useCollection(query(collection(db, 'Articles'), orderBy('Date')));
 
 function addNewArticle() {
   addDoc(collection(useFirestore(), 'Articles'), {

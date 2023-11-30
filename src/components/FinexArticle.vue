@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { collection, updateDoc, doc, deleteDoc } from '@firebase/firestore';
+import { collection, updateDoc, doc, deleteDoc, Timestamp } from '@firebase/firestore';
 import { useFirestore } from 'vuefire';
 
 const props = defineProps({
@@ -16,7 +16,7 @@ const newModel = ref({
   Author: props.article.Author ?? "",
   AuthorImage: props.article.AuthorImage ?? "",
   Content: props.article.Content ?? "",
-  Date: props.article.Date ?? "",
+  Date: props.article.Date ?? new Date(),
   Image: props.article.Image ?? "",
   Video: props.article.Video ?? "",
   Likes: props.article.Likes ?? 0,
@@ -87,7 +87,7 @@ async function saveEdit() {
     Content: newModel.value.Content,
     Image: newModel.value.Image,
     Video: newModel.value.Video,
-    Date: newModel.value.Date,
+    Date: Timestamp.fromDate(new Date(newModel.value.Date)),
     Likes: newModel.value.Likes,
     Views: newModel.value.Views,
     Enabled: newModel.value.Enabled
@@ -130,6 +130,10 @@ function deleteArticle() {
   deleteDoc(doc(useFirestore(), 'Articles', props.article.id));
 }
 
+function getDate() {
+  return (new Date(newModel.value.Date)).toLocaleDateString();
+}
+
 </script>
 
 <template>
@@ -165,8 +169,8 @@ function deleteArticle() {
           </p>
 
           <!-- Date and time -->
-          <input v-if="canEdit()" v-model="newModel.Date" placeholder="date" class="border-2 border-klu-orange"/>
-          <p v-else class="text-light-blue">{{newModel.Date}} </p>
+          <input v-if="canEdit()" type="date" v-model="newModel.Date" placeholder="date" class="border-2 border-klu-orange"/>
+          <p v-else class="text-light-blue">{{getDate()}} </p>
         </div>
       </div>
 
